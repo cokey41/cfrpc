@@ -46,10 +46,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Configure EAS project
-        working-directory: client
-        run: eas init --id ec4f414b-4521-4d49-a5de-b00d38dc79ad
-
       - name: Build APK
         working-directory: client
         run: eas build --platform android --profile preview --non-interactive --wait

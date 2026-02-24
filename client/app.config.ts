@@ -10,7 +10,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     "name": "FRPC 配置管理",
     "slug": slugAppName,
     "version": "1.0.0",
-    "projectId": "ec4f414b-4521-4d49-a5de-b00d38dc79ad",  // EAS Build Project ID
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -73,6 +72,11 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "ec4f414b-4521-4d49-a5de-b00d38dc79ad"
+      }
     }
   }
 }
