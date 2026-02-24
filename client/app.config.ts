@@ -2,13 +2,13 @@ import { ExpoConfig, ConfigContext } from 'expo/config';
 
 const appName = process.env.COZE_PROJECT_NAME || process.env.EXPO_PUBLIC_COZE_PROJECT_NAME || '应用';
 const projectId = process.env.COZE_PROJECT_ID || process.env.EXPO_PUBLIC_COZE_PROJECT_ID;
-const slugAppName = projectId ? `app${projectId}` : 'myapp';
+const slugAppName = projectId ? `app${projectId}` : 'cfrpc';
 
 export default ({ config }: ConfigContext): ExpoConfig => {
   return {
     ...config,
     "name": "FRPC 配置管理",
-    "slug": slugAppName,
+    "slug": "cfrpc",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
