@@ -1,0 +1,61 @@
+name: Build Web App
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Web App with Expo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+        id: pnpm-cache
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install web dependencies
+        working-directory: client
+        run: npx expo install react-native-web react-dom @expo/metro-runtime
+
+      - name: Build web app
+        working-directory: client
+        run: npx expo export --platform web
+
+      - name: Upload web artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frpc-web-app
+          path: client/dist
+          retention-days: 30
