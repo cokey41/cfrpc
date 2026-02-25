@@ -1,0 +1,53 @@
+name: Build Android APK (Gradle)
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build APK with Gradle
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        working-directory: client
+        run: npm install
+
+      - name: Build APK
+        working-directory: client/android
+        run: ./gradlew assembleRelease
+
+      - name: Find APK file
+        working-directory: client
+        run: find . -name "*.apk" -type f | head -1 > apk_path.txt
+
+      - name: Copy APK
+        working-directory: client
+        run: cp $(cat apk_path.txt) app-release.apk
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frpc-app-apk
+          path: client/app-release.apk
+          retention-days: 30
