@@ -29,17 +29,33 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: Install dependencies
         working-directory: client
         run: npm install
 
+      - name: Grant execute permission for gradlew
+        working-directory: client/android
+        run: chmod +x gradlew
+
       - name: Build APK
         working-directory: client/android
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleRelease --stacktrace
 
       - name: Find APK file
         working-directory: client
-        run: find . -name "*.apk" -type f | head -1 > apk_path.txt
+        run: |
+          find . -name "*.apk" -type f | head -1 > apk_path.txt
+          cat apk_path.txt
 
       - name: Copy APK
         working-directory: client
