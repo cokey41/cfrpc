@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "3d2110d0-44e0-4156-928d-9f014cb7174b"
+      }
+    },
+    "android": {
+      "package": "com.cokey.expoexpressmonorepo"
+    }
+  }
+}
