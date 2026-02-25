@@ -47,6 +47,8 @@ jobs:
         working-directory: client/android
         run: |
           chmod +x gradlew
+          # Create symlink for node_modules since Metro looks in project root
+          ln -s ../node_modules ../../node_modules || true
           ./gradlew assembleRelease --no-daemon --stacktrace
 
       - name: Find APK
